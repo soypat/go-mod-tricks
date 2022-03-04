@@ -28,20 +28,25 @@ replace github.com/author/dependency => /path/to/local/copy
 ## Updating an untagged module to latest version
 To update an untagged module (no vX.X.X semantic versioning in place) in a module run the following:
 
-```bash
+```shell
 cd my-module
 go get -u github.com/author/dependency@branch-name
 ```
-where `branch-name` is the name of the branch with the changes you wish to have. You can also specify a certain commit by replacing `branch-name` with the commit hash:
+where `branch-name` is the name of the branch with the changes you wish to have.If you have recent pushes to the module repository the go tool might miss them since it searches a proxy. To avoid this you can tell the go tool to search the direct source:
+```shell
+GOPROXY=direct go get -u github.com/author/dependency@branch-name
+```
 
-```bash
+You can also specify a certain commit by replacing `branch-name` with the commit hash:
+```shell
 go get -u github.com/author/dependency@commit-hash
 ```
+
 
 ## Why am I importing x module?
 To find out how a import is being pulled in you may run the following
 
-```bash
+```shell
 cd my-module
 go mod why -m github.com/author/dependency
 ```
