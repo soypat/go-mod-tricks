@@ -3,6 +3,7 @@ go.mod file and `go mod` command tricks to make using modules "a breeze".
 
 1. [go.mod file tricks](#gomod-file)
     * [Replace a module with local copy](#replace-a-module-with-local-copy)
+    * [List modules used in build](#list-modules-used-in-build)
 
 2. [`go mod` command tricks](#go-mod-command)
     * [Updating an untagged module to latest version](#updating-an-untagged-module-to-latest-version)
@@ -22,6 +23,15 @@ The following line in a `go.mod` file has the effect of compiling the module wit
 ```
 replace github.com/author/dependency => /path/to/local/copy
 ```
+
+## List modules used in build
+The following command lists all modules and their versions used in your build excluding test-only dependencies.
+
+```shell
+go list -deps -f '{{with .Module}}{{.Path}} {{.Version}}{{end}}' ./... | sort -u
+```
+
+Where `sort -u` excludes repeated entries. Thanks to thepudds on slack for command.
 
 # `go mod` Command
 
