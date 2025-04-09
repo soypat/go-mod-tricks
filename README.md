@@ -58,6 +58,38 @@ You can also specify a certain commit by replacing `branch-name` with the commit
 go get -u github.com/author/dependency@commit-hash
 ```
 
+## Using private repository modules
+Sometimes at work you need to keep your go modules private under your github organization URL. To do this create the repository like you normally would and configure Go to treat repositories under the organization URL as "private" by setting the `GOPRIVATE` environment variable
+
+```sh
+go env -w GOPRIVATE=github.com/YourOrg
+```
+
+Next configure git to use ssh to get these modules. Go under the hood uses git for module getting. To do this create a `.gitconfig` file in your home directory, or alternatively at the root of your private repository (you'll need to do this for every private repo if you choose the latter).
+
+```toml
+[user]
+        name = soypat
+        email = my.git.email@example.com
+
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
+
+[url "ssh://git@gitlab.com/"]
+    insteadOf = https://gitlab.com/
+```
+
+Remember to add your **PUBLIC** SSH key to your github/gitlab profile you use at your organization. To generate an ssh key and visualize your **PUBLIC** ssh key run the following command and press <kbd>Enter</kbd> on all dialog prompts:
+```sh
+ssh-keygen
+```
+Next you should have a ssh public key in your `~/.ssh` folder at your home directory which starts with `id` and ends with `.pub`. Visualize it by running the following bash command:
+```sh
+cat $HOME/.ssh/*.pub
+```
+This is the key you need to setup for your profile for go get to work with private repositories.
+
+
 
 ## Why am I importing x module?
 To find out how a import is being pulled in you may run the following
